@@ -1,0 +1,35 @@
+count = 5;
+width = 9;
+height = 6;
+interval = 0.031;
+imageFileNames = {1,count};
+for i = 1:count
+  imageFileNames{i} = sprintf('images/%d.jpg', i);
+end
+[imagePoints,boardSize,imagesUsed] = detectCheckerboardPoints(imageFileNames);
+x=-interval;y=-interval;
+M =zeros(width*height,2);
+for i=1:width
+    x = x+interval;
+    for j=1:height
+        y = y+interval;
+        M((i-1)*height+j,1)=x;
+        M((i-1)*height+j,2)=y;
+    end
+    y=-interval;
+end
+worldPoints
+I = readimage(images,1);
+imageSize = [size(I,1),size(I,2)];
+cameraParams = estimateCameraParameters(imagePoints,worldPoints, ...
+                                       'ImageSize',imageSize);
+
+
+% imageFileNames = imageFileNames(imagesUsed);
+% for i = 1:numel(imageFileNames)
+%   I = imread(imageFileNames{i});
+%   subplot(2, 3, i);
+%   imshow(I);
+%   hold on;
+%   plot(imagePoints(:,1,i),imagePoints(:,2,i),'ro');
+% end
